@@ -1,12 +1,13 @@
 import { StatusBar } from 'expo-status-bar'
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, FlatList, Alert } from 'react-native'
+import { StyleSheet, View,  Alert } from 'react-native'
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
 
 import { Navbar } from './src/components/Navbar'
 import { MainScreen } from './src/screens/MainScreen'
 import { TodoScreen } from './src/screens/TodoScreen'
+import { THEME } from './src/theme'
 
 async function loadApplication() {
   await Font.loadAsync({
@@ -119,7 +120,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 30,
+    paddingHorizontal: THEME.PADDING_HORIZONTAL,
     paddingVertical: 20,
   },
 })
