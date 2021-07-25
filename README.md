@@ -7,3 +7,4 @@
 3.	Recording editing screen
 4.	Refactoring the application
 5.	Working with the firebase database (http)
+The code is written in React Native only
