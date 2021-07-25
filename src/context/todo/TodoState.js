@@ -13,6 +13,7 @@ import {
   FETCH_TODOS,
 } from '../types'
 import { ScreenContext } from '../screen/screenContext'
+import { Http } from '../../http'
 
 export const TodoState = ({ children }) => {
   const initialState = {
@@ -24,16 +25,16 @@ export const TodoState = ({ children }) => {
   const [state, dispatch] = useReducer(todoReducer, initialState)
 
   const addTodo = async (title) => {
-    const response = await fetch(
-      'https://rn-todo-52c55-default-rtdb.europe-west1.firebasedatabase.app/todos.json',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title }),
-      }
-    )
-    const data = await response.json()
-    dispatch({ type: ADD_TODO, title, id: data.name })
+    clearError()
+    try {
+      const data = await Http.post(
+        'https://rn-todo-52c55-default-rtdb.europe-west1.firebasedatabase.app/todos.json',
+        { title }
+      )
+      dispatch({ type: ADD_TODO, title, id: data.name })
+    } catch (e) {
+      showError('Somethink went wrong1...')
+    }
   }
 
   const removeTodo = (id) => {
@@ -51,14 +52,14 @@ export const TodoState = ({ children }) => {
           style: 'destructive',
           onPress: async () => {
             changeScreen(null)
-            await fetch(
-              `https://rn-todo-52c55-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`,
-              {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-              }
-            )
-            dispatch({ type: REMOVE_TODO, id })
+            try {
+              await Http.delete(
+                `https://rn-todo-52c55-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`
+              )
+              dispatch({ type: REMOVE_TODO, id })
+            } catch (e) {
+              showError('Somethink went wrong2...')
+            }
           },
         },
       ],
@@ -70,20 +71,13 @@ export const TodoState = ({ children }) => {
     showLoader()
     clearError()
     try {
-      const response = await fetch(
-        'https://rn-todo-52c55-default-rtdb.europe-west1.firebasedatabase.app/todos.json',
-        {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        }
+      const data = await Http.get(
+        'https://rn-todo-52c55-default-rtdb.europe-west1.firebasedatabase.app/todos.json'
       )
-      const data = await response.json()
-      // console.log('Fetch data', data)
       const todos = Object.keys(data).map((key) => ({ ...data[key], id: key }))
       dispatch({ type: FETCH_TODOS, todos })
     } catch (e) {
-      showError('Somethink went wrong...')
-      console.log(e)
+      showError()
     } finally {
       hideLoader()
     }
@@ -92,17 +86,12 @@ export const TodoState = ({ children }) => {
   const updateTodo = async (id, title) => {
     clearError()
     try {
-      await fetch(
-        `https://rn-todo-52c55-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`,
-        {
-          method: 'PATCH',
-          headers: { 'Content-type': 'application/json' },
-          body: JSON.stringify({ title }),
-        }
+      await Http.patch(
+        `https://rn-todo-52c55-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`
       )
       dispatch({ type: UPDATE_TODO, id, title })
     } catch (e) {
-      showError('Somethink went wrong...')
+      showError('Somethink went wrong4...')
       console.log(e)
     }
   }
