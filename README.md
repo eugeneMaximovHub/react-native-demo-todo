@@ -1,6 +1,6 @@
 # A classic to-do list single-page app
 
-##Implemented functionality
+## Implemented functionality
 
 1.	Adding and deleting tasks
 2.	Error messages for users and developers
