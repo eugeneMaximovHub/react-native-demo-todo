@@ -38,7 +38,7 @@ export class Http {
 async function request(url, method = 'GET', data) {
   const config = {
     method,
-    headers: Http.HEADERS
+    headers: Http.HEADERS,
   }
 
   if (method === 'POST' || method === 'PATCH') {

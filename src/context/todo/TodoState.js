@@ -76,6 +76,7 @@ export const TodoState = ({ children }) => {
       )
       const todos = Object.keys(data).map((key) => ({ ...data[key], id: key }))
       dispatch({ type: FETCH_TODOS, todos })
+
     } catch (e) {
       showError()
     } finally {
@@ -85,13 +86,19 @@ export const TodoState = ({ children }) => {
 
   const updateTodo = async (id, title) => {
     clearError()
+
     try {
-      await Http.patch(
-        `https://rn-todo-52c55-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`
+      await fetch(
+        `https://rn-todo-52c55-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title }),
+        }
       )
       dispatch({ type: UPDATE_TODO, id, title })
     } catch (e) {
-      showError('Somethink went wrong4...')
+      showError('Somethink went wrong2...')
       console.log(e)
     }
   }
