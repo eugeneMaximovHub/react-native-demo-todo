@@ -28,7 +28,7 @@ export const TodoState = ({ children }) => {
     clearError()
     try {
       const data = await Http.post(
-        'https://rn-todo-52c55-default-rtdb.europe-west1.firebasedatabase.app/todos.json',
+        'https://rn-todo-app-54599-default-rtdb.europe-west1.firebasedatabase.app/todos.json',
         { title }
       )
       dispatch({ type: ADD_TODO, title, id: data.name })
@@ -48,18 +48,14 @@ export const TodoState = ({ children }) => {
           style: 'cancel',
         },
         {
-          text: 'Del',
+          text: 'del',
           style: 'destructive',
           onPress: async () => {
             changeScreen(null)
-            try {
-              await Http.delete(
-                `https://rn-todo-52c55-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`
-              )
-              dispatch({ type: REMOVE_TODO, id })
-            } catch (e) {
-              showError('Somethink went wrong2...')
-            }
+            await Http.delete(
+              `https://rn-todo-app-54599-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`
+            )
+            dispatch({ type: REMOVE_TODO, id })
           },
         },
       ],
@@ -72,11 +68,10 @@ export const TodoState = ({ children }) => {
     clearError()
     try {
       const data = await Http.get(
-        'https://rn-todo-52c55-default-rtdb.europe-west1.firebasedatabase.app/todos.json'
+        'https://rn-todo-app-54599-default-rtdb.europe-west1.firebasedatabase.app/todos.json'
       )
       const todos = Object.keys(data).map((key) => ({ ...data[key], id: key }))
       dispatch({ type: FETCH_TODOS, todos })
-
     } catch (e) {
       showError()
     } finally {
@@ -89,7 +84,7 @@ export const TodoState = ({ children }) => {
 
     try {
       await fetch(
-        `https://rn-todo-52c55-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`,
+        `https://rn-todo-app-54599-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`,
         {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
